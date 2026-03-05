@@ -125,22 +125,3 @@ jobs:
       - name: Run tests
         run: cd frontend && npx vitest run
 
-  # ── Docker Build ──────────────────────────────────────────────────────────
-  build-docker:
-    name: Build Docker Images
-    needs: [test-backend, test-frontend]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build backend image
-        run: docker build -t paperpal-backend:ci ./backend
-
-      - name: Build frontend image
-        run: docker build -t paperpal-frontend:ci ./frontend
-
-      - name: Verify images
-        run: |
-          docker images | grep paperpal
-          echo "✅ All images built successfully"

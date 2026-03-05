@@ -32,13 +32,15 @@ Agent Paperpal uses a **5-stage agentic pipeline** powered by LangGraph to proce
 | File Store | AWS S3 / MinIO (local) |
 | LLM | Anthropic Claude (claude-sonnet-4-20250514) |
 | CI/CD | GitHub Actions |
-| Infra | Docker Compose (dev), Kubernetes (prod) |
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- [Docker](https://docs.docker.com/get-docker/) & Docker Compose v2
+- Python 3.12+
+- Node.js 20+
+- Native PostgreSQL integration globally installed and running
+- Native Redis Server globally installed and running
 - [GNU Make](https://www.gnu.org/software/make/) (optional, for convenience)
 - An [Anthropic API key](https://console.anthropic.com/)
 
@@ -48,34 +50,51 @@ Agent Paperpal uses a **5-stage agentic pipeline** powered by LangGraph to proce
 git clone https://github.com/your-org/agent-paperpal.git
 cd agent-paperpal
 cp .env.example .env
-# Edit .env and set your ANTHROPIC_API_KEY + SECRET_KEY
+# Edit .env and set your ANTHROPIC_API_KEY + SECRET_KEY, Postgres & Redis connection strings
 ```
 
-### 2. Start Everything
+### 2. Install Dependencies
 
 ```bash
-make dev
+make install
+# or manually:
+# cd backend && pip install -r requirements.txt
+# cd frontend && npm install
 ```
 
-This single command will:
-- Build all Docker images
-- Start PostgreSQL, Redis, MinIO, Backend, Celery Worker, and Frontend
-- Run database migrations
-- Create the S3 bucket in MinIO
+### 3. Database Migration
 
-### 3. Verify
+```bash
+make migrate
+```
+
+### 4. Start Development Servers
+
+Run these steps in separate terminal windows:
+
+```bash
+# Terminal 1: Backend
+make dev-backend
+
+# Terminal 2: Celery Worker
+make dev-celery
+
+# Terminal 3: Frontend
+make dev-frontend
+```
+
+### 5. Verify
 
 | Service | URL |
 |---------|-----|
 | Backend API Health | [http://localhost:8000/api/v1/health](http://localhost:8000/api/v1/health) |
 | Frontend | [http://localhost:5173](http://localhost:5173) |
-| MinIO Console | [http://localhost:9001](http://localhost:9001) |
 | API Docs (Swagger) | [http://localhost:8000/docs](http://localhost:8000/docs) |
 | API Docs (ReDoc) | [http://localhost:8000/redoc](http://localhost:8000/redoc) |
 
 ## 📁 Project Structure
 
-```
+```text
 agent-paperpal/
 ├── backend/                    # Python FastAPI application
 │   ├── app/
@@ -94,7 +113,6 @@ agent-paperpal/
 │   │   └── main.py             # FastAPI app factory
 │   ├── alembic/                # Database migrations
 │   ├── tests/                  # Backend unit tests
-│   ├── Dockerfile
 │   └── requirements.txt
 ├── frontend/                   # React 18 + Vite application
 │   ├── src/
@@ -102,15 +120,12 @@ agent-paperpal/
 │   │   ├── hooks/              # Custom React hooks
 │   │   ├── store/              # Redux Toolkit store
 │   │   └── App.jsx
-│   ├── Dockerfile
 │   └── package.json
 ├── ml_models/                  # spaCy + HuggingFace artifacts
-├── infra/                      # Docker, K8s, Terraform
 ├── docs/                       # Architecture documentation
 ├── tests/                      # E2E integration tests
 ├── scripts/                    # Utility scripts
 ├── .github/workflows/          # CI/CD pipelines
-├── docker-compose.yml
 ├── .env.example
 ├── Makefile
 └── README.md
@@ -119,9 +134,10 @@ agent-paperpal/
 ## 🧪 Development Commands
 
 ```bash
-make dev              # Start dev environment
-make stop             # Stop all services
-make restart          # Restart services
+make install          # Install all dependencies
+make dev-backend      # Start backend dev server
+make dev-celery       # Start celery worker
+make dev-frontend     # Start frontend dev server
 make test             # Run all tests (pytest + vitest)
 make test-backend     # Run backend tests only
 make test-frontend    # Run frontend tests only
@@ -129,10 +145,6 @@ make migrate          # Run database migrations
 make migrate-create MSG="description"  # Create new migration
 make lint             # Lint all code (ruff + eslint)
 make format           # Auto-format Python code
-make logs             # Tail backend + celery logs
-make logs-all         # Tail all service logs
-make shell            # Open shell in backend container
-make clean            # Stop containers, remove volumes
 ```
 
 ## 🔐 Environment Variables
