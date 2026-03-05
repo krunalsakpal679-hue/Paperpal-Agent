@@ -1,0 +1,58 @@
+# Agent Paperpal — .gitignore
+
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# ── Virtual environments ───────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Environment ────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── IDE ────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Node / Frontend ───────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/build/
+.eslintcache
+
+# ── Docker ─────────────────────────────────────────────────────────────────
+*.log
+
+# ── OS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── Testing ────────────────────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/
+coverage/
+
+# ── ML Models (large files — use Git LFS or download at build) ─────────────
+ml_models/*.bin
+ml_models/*.pt
+ml_models/*.onnx
+
+# ── Misc ───────────────────────────────────────────────────────────────────
+*.bak
+*.tmp
