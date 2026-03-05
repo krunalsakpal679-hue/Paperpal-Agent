@@ -2,104 +2,55 @@
 """
 Job ORM model.
 
-Represents a manuscript formatting job submitted by a user.
-Tracks pipeline status, progress, and output artifacts.
+Stores formatting job metadata and tracking information.
 """
 
-import enum
+from enum import Enum
 import uuid
-
-from sqlalchemy import Enum, Float, ForeignKey, String, Text
-from sqlalchemy.dialects.postgresql import JSON, UUID
+from datetime import datetime
+from sqlalchemy import String, Float, Integer, ForeignKey, DateTime, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.models.base import Base
 
 
-class JobStatus(str, enum.Enum):
-    """Pipeline job status enumeration."""
-
-    PENDING = "pending"
-    INGESTING = "ingesting"
-    PARSING = "parsing"
-    INTERPRETING = "interpreting"
-    TRANSFORMING = "transforming"
-    VALIDATING = "validating"
-    RENDERING = "rendering"
-    COMPLETED = "completed"
-    FAILED = "failed"
-    CANCELLED = "cancelled"
+class JobStatus(str, Enum):
+    """Execution status of a formatting job."""
+    queued = "queued"
+    ingesting = "ingesting"
+    parsing = "parsing"
+    interpreting = "interpreting"
+    transforming = "transforming"
+    validating = "validating"
+    rendering = "rendering"
+    completed = "completed"
+    failed = "failed"
 
 
 class Job(Base):
-    """Manuscript formatting job."""
-
+    """Formatting Job."""
     __tablename__ = "jobs"
 
-    # ── Ownership ───────────────────────────────────────────────────────────
-    user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), index=True, nullable=False)
+    status: Mapped[JobStatus] = mapped_column(SQLEnum(JobStatus), default=JobStatus.queued, nullable=False, index=True)
+    
+    source_format: Mapped[str] = mapped_column(String(10), nullable=False)
+    original_filename: Mapped[str] = mapped_column(String(500), nullable=False)
+    
+    raw_s3_key: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    output_s3_key: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    latex_s3_key: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    
+    journal_identifier: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    style_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    
+    compliance_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    total_changes: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    
+    error_message: Mapped[str | None] = mapped_column(String, nullable=True)
+    progress_pct: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    # ── Job metadata ────────────────────────────────────────────────────────
-    filename: Mapped[str] = mapped_column(
-        String(512),
-        nullable=False,
-    )
-    target_journal: Mapped[str] = mapped_column(
-        String(512),
-        nullable=False,
-    )
-    status: Mapped[JobStatus] = mapped_column(
-        Enum(JobStatus),
-        default=JobStatus.PENDING,
-        nullable=False,
-        index=True,
-    )
-    progress_pct: Mapped[float] = mapped_column(
-        Float,
-        default=0.0,
-        nullable=False,
-    )
-
-    # ── S3 references ───────────────────────────────────────────────────────
-    input_s3_key: Mapped[str | None] = mapped_column(
-        String(1024),
-        nullable=True,
-    )
-    output_s3_urls: Mapped[dict | None] = mapped_column(
-        JSON,
-        nullable=True,
-    )
-
-    # ── Pipeline artifacts (stored as JSON) ─────────────────────────────────
-    change_log: Mapped[list | None] = mapped_column(
-        JSON,
-        nullable=True,
-    )
-    compliance_report: Mapped[dict | None] = mapped_column(
-        JSON,
-        nullable=True,
-    )
-    errors: Mapped[list | None] = mapped_column(
-        JSON,
-        default=list,
-        nullable=True,
-    )
-
-    # ── Error details ───────────────────────────────────────────────────────
-    error_message: Mapped[str | None] = mapped_column(
-        Text,
-        nullable=True,
-    )
-
-    # ── Relationships ───────────────────────────────────────────────────────
-    user: Mapped["User"] = relationship(  # noqa: F821
-        back_populates="jobs",
-    )
-
-    def __repr__(self) -> str:
-        return f"<Job(id={self.id}, status={self.status}, journal={self.target_journal})>"
+    user = relationship("User", back_populates="jobs")

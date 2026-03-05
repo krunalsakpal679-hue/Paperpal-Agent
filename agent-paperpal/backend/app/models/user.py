@@ -2,46 +2,20 @@
 """
 User ORM model.
 
-Stores registered user accounts for API authentication
-and job ownership tracking.
+Stores registered user accounts.
 """
 
-from sqlalchemy import String
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
 
-
 class User(Base):
-    """Registered user account."""
-
+    """User account model."""
     __tablename__ = "users"
 
-    email: Mapped[str] = mapped_column(
-        String(255),
-        unique=True,
-        nullable=False,
-        index=True,
-    )
-    hashed_password: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False,
-    )
-    full_name: Mapped[str | None] = mapped_column(
-        String(255),
-        nullable=True,
-    )
-    is_active: Mapped[bool] = mapped_column(
-        default=True,
-        nullable=False,
-    )
+    email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
-    # Relationships
-    jobs: Mapped[list["Job"]] = relationship(  # noqa: F821
-        back_populates="user",
-        cascade="all, delete-orphan",
-        lazy="selectin",
-    )
-
-    def __repr__(self) -> str:
-        return f"<User(id={self.id}, email={self.email})>"
+    jobs = relationship("Job", back_populates="user", cascade="all, delete-orphan")
