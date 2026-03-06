@@ -1,0 +1,19 @@
+[StructureDetector] spaCy unavailable (unable to infer type for attribute "REGEX") — using rule-only detection
+[StructureDetector] spaCy unavailable (unable to infer type for attribute "REGEX") — using rule-only detection
+\u26a0\ufe0f  Redis connection failed: Error 22 connecting to localhost:6379. The remote computer refused the network connection.
+C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend\app\api\v1\endpoints\jobs.py:121: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+  db.add(job)
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+============================================================
+VALIDATING API GATEWAY & ORCHESTRATION
+============================================================
+[PASS] SC-5: Missing token returns 401
+[PASS] SC-5: Invalid token returns 401
+[PASS] SC-1: POST /api/v1/jobs returns 202 with job_id in 24.25ms (< 500ms)
+[FAIL] SC-3: Result endpoint returned 400
+[FAIL] SC-4: Unexpected exception 'AsyncSession' object is not callable
+[PASS] SC-2: WebSocket received all 5 agent completion events: ['ingesting', 'parsing', 'interpreting', 'transforming', 'validating', 'completed']
+
+============================================================
+API AND ORCHESTRATION VALIDATION COMPLETE
+============================================================

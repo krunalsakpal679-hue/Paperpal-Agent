@@ -123,8 +123,16 @@ async def run_sc_checks():
     from app.worker.tasks import _run_pipeline_async
     
     async def mock_subscribe(job_id):
-        yield {"status": "queued"}
-        yield {"status": "completed"}
+        events = [
+            {"status": "ingesting", "progress": 20},
+            {"status": "parsing", "progress": 40},
+            {"status": "interpreting", "progress": 60},
+            {"status": "transforming", "progress": 80},
+            {"status": "validating", "progress": 90},
+            {"status": "completed", "progress": 100}
+        ]
+        for event in events:
+            yield event
 
     with patch("app.worker.tasks.job_service.get_job", new_callable=AsyncMock) as mock_get_job, \
          patch("app.worker.tasks.job_service.update_status", new_callable=AsyncMock) as mock_update_status, \
@@ -151,12 +159,23 @@ async def run_sc_checks():
             else:
                 print("[FAIL] SC-4: Unexpected exception", e)
                 
-        # SC-2: Websocket connection checking (Using start testing)
+        # SC-2: Websocket connection checking
+        received_statuses = []
         with client.websocket_connect(f"/api/v1/jobs/{job_id}/stream") as websocket:
-            # The websocket current mockup sends initial messages
-            data = websocket.receive_json()
-            if data.get("status") == "queued":
-                print("[PASS] SC-2: WebSocket receives agent completion events (queued received)")
+            try:
+                while True:
+                    data = websocket.receive_json()
+                    received_statuses.append(data.get("status"))
+                    if data.get("status") in ("completed", "failed"):
+                        break
+            except Exception:
+                pass
+        
+        agent_statuses = {"ingesting", "parsing", "interpreting", "transforming", "validating"}
+        if agent_statuses.issubset(set(received_statuses)):
+             print(f"[PASS] SC-2: WebSocket received all 5 agent completion events: {received_statuses}")
+        else:
+             print(f"[FAIL] SC-2: WebSocket missed some agent events. Received: {received_statuses}")
         
     print("\n============================================================")
     print("API AND ORCHESTRATION VALIDATION COMPLETE")
