@@ -7,10 +7,16 @@ All endpoints are prefixed with /api/v1 (set in main.py).
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import health, jobs, results, styles
+from app.api.v1.endpoints import health, jobs, results, styles, auth
 from app.api.websocket import router as ws_router
 
 api_v1_router = APIRouter()
+
+api_v1_router.include_router(
+    auth.router,
+    prefix="/auth",
+    tags=["Auth"],
+)
 
 api_v1_router.include_router(
     health.router,
