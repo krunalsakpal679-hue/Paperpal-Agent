@@ -25,9 +25,7 @@ api.interceptors.response.use(
 );
 
 export const submitJob = async (formData) => {
-    const { data } = await api.post('/api/v1/jobs/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const { data } = await api.post('/api/v1/jobs/', formData);
     return data;
 };
 
