@@ -8,8 +8,10 @@ Field names in this file are IMMUTABLE per project convention.
 
 from datetime import datetime
 from enum import Enum
+from typing import Any
 
 from pydantic import BaseModel, Field
+
 
 from app.schemas.ir import IRSchema
 from app.schemas.jro import JROSchema
@@ -88,3 +90,11 @@ class JobState(BaseModel):
     status: JobStatus = Field(default=JobStatus.PENDING)
     errors: list[AgentError] = Field(default_factory=list)
     progress_pct: float = Field(default=0.0, ge=0.0, le=100.0)
+    metadata: dict[str, Any] = Field(
+        default_factory=dict,
+        description=(
+            "Arbitrary job-level context set by the API layer before dispatch. "
+            "Keys used by agents: raw_s3_key (str), source_format (str)."
+        ),
+    )
+
