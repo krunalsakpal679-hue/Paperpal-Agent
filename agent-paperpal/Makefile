@@ -19,7 +19,13 @@ dev-frontend: ## Start Frontend dev server
 	cd frontend && npm run dev
 
 dev-celery: ## Start Celery worker
-	cd backend && celery -A app.core.celery_app worker --loglevel=info
+	cd backend && celery -A app.celery_app:celery worker --loglevel=info
+
+infra-up: ## Start local infrastructure (DB, Redis, MinIO)
+	docker compose up -d
+
+infra-down: ## Stop local infrastructure
+	docker compose down
 
 dev: ## Local Dev instructions
 	@echo "Without Docker, please run the following commands in separate terminals:"

@@ -16,11 +16,11 @@ export default function Login() {
         setLoading(true);
 
         try {
-            // Assuming the backend has a /api/v1/auth/login endpoint
-            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/auth/login`, {
-                username: email, // FastAPI OAuth2 uses username field
-                password: password
-            }, {
+            const formData = new URLSearchParams();
+            formData.append('username', email);
+            formData.append('password', password);
+
+            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/auth/login`, formData, {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
 

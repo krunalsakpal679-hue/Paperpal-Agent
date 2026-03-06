@@ -10,7 +10,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import anthropic
+import google.generativeai as genai
 from app.config import settings
 from app.schemas.jro_schema import JROSchema
 
@@ -18,12 +18,13 @@ logger = logging.getLogger(__name__)
 
 class LLMRuleExtractor:
     """
-    Extracts formatting rules using Anthropic LLM.
+    Extracts formatting rules using Google Gemini (Free Tier).
     Implements retries and validation against JROSchema.
     """
 
     def __init__(self):
-        self.client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
+        genai.configure(api_key=settings.GOOGLE_API_KEY)
+        self.model = genai.GenerativeModel("gemini-2.0-flash")
         self.curr_dir = Path(__file__).parent
         self.system_prompt = (self.curr_dir / "prompts" / "system_prompt.txt").read_text(encoding="utf-8")
         self.few_shot_examples = json.loads((self.curr_dir / "prompts" / "few_shot_examples.json").read_text(encoding="utf-8"))
@@ -41,18 +42,13 @@ class LLMRuleExtractor:
         
         while retries <= max_retries:
             try:
-                current_prompt = user_prompt
+                full_prompt = f"{self.system_prompt}\n\n{user_prompt}"
                 if last_error:
-                    current_prompt += f"\n\nPrevious attempt failed validation with error: {last_error}. Please fix the JSON and try again."
+                    full_prompt += f"\n\nPrevious attempt failed validation with error: {last_error}. Please fix the JSON and try again."
                 
-                response = await self.client.messages.create(
-                    model="claude-sonnet-4-20250514", # Matching prompt specification
-                    max_tokens=2000,
-                    system=self.system_prompt,
-                    messages=[{"role": "user", "content": current_prompt}]
-                )
+                response = await self.model.generate_content_async(full_prompt)
                 
-                raw_content = response.content[0].text
+                raw_content = response.text
                 json_str = self._clean_json_string(raw_content)
                 data = json.loads(json_str)
                 data["journal_name"] = journal_name
@@ -63,6 +59,9 @@ class LLMRuleExtractor:
                 retries += 1
                 last_error = str(e)
                 logger.warning("Extraction attempt %d failed for %s: %s", retries, journal_name, last_error)
+                if retries <= max_retries:
+                    import asyncio
+                    await asyncio.sleep(2 * retries)
         
         return self._make_partial_jro(journal_name)
 

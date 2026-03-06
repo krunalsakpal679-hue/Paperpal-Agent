@@ -39,27 +39,33 @@ Agent Paperpal uses a **5-stage agentic pipeline** powered by LangGraph to proce
 
 - Python 3.12+
 - Node.js 20+
-- Native PostgreSQL integration globally installed and running
-- Native Redis Server globally installed and running
+- Python 3.12+
+- Node.js 20+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for local DB/Redis/MinIO)
 - [GNU Make](https://www.gnu.org/software/make/) (optional, for convenience)
-- An [Anthropic API key](https://console.anthropic.com/)
+- A [Google Gemini API key](https://aistudio.google.com/) (Free Tier)
 
 ### 1. Clone & Configure
 
 ```bash
 git clone https://github.com/your-org/agent-paperpal.git
 cd agent-paperpal
+### 1. Configure Environment
+```bash
 cp .env.example .env
-# Edit .env and set your ANTHROPIC_API_KEY + SECRET_KEY, Postgres & Redis connection strings
+# Open .env and set your GOOGLE_API_KEY (from AI Studio)
+# Set a random SECRET_KEY for JWT
 ```
 
-### 2. Install Dependencies
+### 2. Start Local Infrastructure
+```bash
+make infra-up
+```
 
+### 3. Install Dependencies & Migrate
 ```bash
 make install
-# or manually:
-# cd backend && pip install -r requirements.txt
-# cd frontend && npm install
+make migrate
 ```
 
 ### 3. Database Migration

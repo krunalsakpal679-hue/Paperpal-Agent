@@ -23,9 +23,9 @@ class Settings(BaseSettings):
     )
 
     # ── LLM Provider ────────────────────────────────────────────────────────
-    ANTHROPIC_API_KEY: str = Field(
+    GOOGLE_API_KEY: str = Field(
         ...,
-        description="Anthropic Claude API key for LLM-powered agents",
+        description="Google Gemini API key for free-tier LLM-powered agents",
     )
 
     # ── Database ────────────────────────────────────────────────────────────

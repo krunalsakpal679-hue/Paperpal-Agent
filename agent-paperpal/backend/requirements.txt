@@ -28,10 +28,10 @@ python-jose[cryptography]>=3.3.0
 passlib[bcrypt]>=1.7.4
 
 # ── LLM / AI ───────────────────────────────────────────────────────────────
-anthropic>=0.42.0
+google-generativeai>=0.8.3
 langgraph>=0.2.60
 langchain-core>=0.3.29
-langchain-anthropic>=0.3.4
+langchain-google-genai>=2.0.8
 
 # ── NLP ─────────────────────────────────────────────────────────────────────
 spacy>=3.8.0              # Structure detection (graceful fallback if model unavailable)
