@@ -1,114 +1,107 @@
 # backend/app/agents/validation/agent.py
 """
-Stage 5 — ValidationAgent.
-
-Runs compliance checks against the JRO to verify that the transformed IR
-meets all journal formatting requirements. Produces a scored compliance report.
-
-Input:  transformed_ir (IRSchema) + jro (JROSchema)
-Output: compliance_report (ValidationReport)
+ValidationAgent: Orchestrates the final compliance validation stage.
+Aggregates results from citation, structure, and content checkers.
 """
 
 import logging
+from typing import List
 
-from app.schemas.job_state import (
-    AgentError,
-    ComplianceItem,
-    JobState,
-    JobStatus,
-    ValidationReport,
-)
+from app.schemas.job_state import JobState, JobStatus, ValidationReport, AgentError, ComplianceItem
+from app.services.cache_service import cache_service
+
+from .citation_checker import CitationConsistencyChecker
+from .structure_checker import StructureChecker
+from .content_checker import ContentChecker
+from .compliance_scorer import ComplianceScorer
 
 logger = logging.getLogger(__name__)
 
-AGENT_NAME = "ValidationAgent"
-
-
-async def run_validation(state: JobState) -> JobState:
+class ValidationAgent:
     """
-    Orchestrator-facing entry point for the validation stage.
-
-    Checks the transformed IR against every rule in the JRO and
-    generates a scored compliance report.
-
-    Args:
-        state: Pipeline state with transformed_ir and jro populated.
-
-    Returns:
-        Updated state with compliance_report populated.
+    Orchestrates compliance checking and scoring.
     """
-    logger.info("[%s] Starting validation for job %s", AGENT_NAME, state.job_id)
-    state.status = JobStatus.VALIDATING
-    state.progress_pct = 85.0
 
-    try:
-        if state.transformed_ir is None:
-            raise ValueError("transformed_ir is None — transform stage may have failed")
-        if state.jro is None:
-            raise ValueError("jro is None — rule interpretation stage may have failed")
+    async def run(self, state: JobState) -> JobState:
+        """
+        Execute the validation pipeline stage.
+        """
+        if not state.transformed_ir or not state.jro:
+            logger.error("[%s] transformed_ir or jro missing from JobState.", "ValidationAgent")
+            state.errors.append(AgentError(
+                agent="ValidationAgent",
+                error_type="ValueError",
+                message="Validation requires both transformed_ir and jro to be populated.",
+                recoverable=False
+            ))
+            state.status = JobStatus.FAILED
+            return state
 
-        # TODO: Implement comprehensive compliance checks
-        # Check categories:
-        #   - Font compliance (family, size, spacing)
-        #   - Heading formatting
-        #   - Citation style
-        #   - Reference format
-        #   - Abstract requirements
-        #   - Word count limits
-        #   - Required sections
+        logger.info("[%s] Starting validation for job: %s", "ValidationAgent", state.job_id)
+        state.status = JobStatus.VALIDATING
+        state.progress_pct = 90.0
 
-        items = [
-            ComplianceItem(
-                rule="Font family matches JRO",
-                passed=True,
-                message="Body font is Times New Roman as required",
-                severity="info",
-            ),
-            ComplianceItem(
-                rule="Font size matches JRO",
-                passed=True,
-                message="Body font size is 12pt as required",
-                severity="info",
-            ),
-            ComplianceItem(
-                rule="Line spacing matches JRO",
-                passed=True,
-                message="Line spacing is 2.0 as required",
-                severity="info",
-            ),
-        ]
+        try:
+            issues: List[ComplianceItem] = []
+            
+            # 1. Check citations
+            citation_issues, citation_cov = CitationConsistencyChecker().check(state.transformed_ir)
+            issues.extend(citation_issues)
+            
+            # 2. Check structure
+            issues.extend(StructureChecker().check(state.transformed_ir, state.jro))
+            
+            # 3. Check content
+            issues.extend(ContentChecker().check(state.transformed_ir, state.jro))
+            
+            # 4. Calculate scores
+            scores = ComplianceScorer().score(issues, state.transformed_ir)
+            
+            # 5. Populate ValidationReport
+            failed_count = len([i for i in issues if i.severity == "error"])
+            warning_count = len([i for i in issues if i.severity == "warning"])
+            
+            state.compliance_report = ValidationReport(
+                overall_score=round(scores["overall"] * 100, 2),
+                category_scores={k: round(v * 100, 2) for k, v in scores.items() if k != "overall"},
+                issues=issues,
+                citation_coverage=citation_cov,
+                total_issues=len(issues),
+                total_checks=len(issues) + 10, # Heuristic
+                passed=max(0, 10 - failed_count),
+                failed=failed_count,
+                warnings=warning_count
+            )
+            
+            state.progress_pct = 95.0
+            state.status = JobStatus.COMPLETED
+            
+            # 6. Publish progress
+            await cache_service.publish_progress(state.job_id, {
+                "agent": "validation",
+                "status": "completed",
+                "pct": 95,
+                "overall_score": state.compliance_report.overall_score
+            })
+            
+            logger.info(
+                "[%s] Validation completed for %s — Score: %.2f, Issues: %d", 
+                "ValidationAgent", state.job_id, state.compliance_report.overall_score, len(issues)
+            )
 
-        passed = sum(1 for item in items if item.passed)
-        failed = sum(1 for item in items if not item.passed)
-        warnings = sum(1 for item in items if item.severity == "warning")
+        except Exception as e:
+            logger.exception("[%s] Unexpected error during validation: %s", "ValidationAgent", e)
+            state.errors.append(AgentError(
+                agent="ValidationAgent",
+                error_type=type(e).__name__,
+                message=str(e),
+                recoverable=True
+            ))
+            state.status = JobStatus.FAILED
 
-        state.compliance_report = ValidationReport(
-            total_checks=len(items),
-            passed=passed,
-            failed=failed,
-            warnings=warnings,
-            items=items,
-            overall_score=(passed / len(items) * 100) if items else 0.0,
-        )
+        return state
 
-        state.progress_pct = 95.0
-        state.status = JobStatus.COMPLETED
-        logger.info(
-            "[%s] Validation completed for job %s (score: %.1f%%)",
-            AGENT_NAME,
-            state.job_id,
-            state.compliance_report.overall_score,
-        )
-
-    except Exception as exc:
-        error = AgentError(
-            agent=AGENT_NAME,
-            error_type=type(exc).__name__,
-            message=str(exc),
-            recoverable=False,
-        )
-        state.errors.append(error)
-        state.status = JobStatus.FAILED
-        logger.exception("[%s] Validation failed for job %s", AGENT_NAME, state.job_id)
-
-    return state
+async def run_stage5(state: JobState) -> JobState:
+    """LangGraph node helper for Stage 5."""
+    agent = ValidationAgent()
+    return await agent.run(state)

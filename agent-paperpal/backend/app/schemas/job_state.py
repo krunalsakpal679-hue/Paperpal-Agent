@@ -55,10 +55,15 @@ class ChangeEntry(BaseModel):
 class ComplianceItem(BaseModel):
     """A single compliance check result."""
 
-    rule: str = Field(..., description="Rule being checked")
+    rule: str = Field(default="", description="Rule being checked (legacy)")
     passed: bool = Field(..., description="Whether the check passed")
-    message: str = Field(default="", description="Details about the check result")
+    message: str = Field(default="", description="Details about the check result (legacy)")
     severity: str = Field(default="info", description="info | warning | error")
+    
+    # New fields per Stage 5 requirements
+    description: str = Field(default="", description="Full description of the issue")
+    rule_ref: str = Field(default="", description="Reference to the journal rule")
+    suggestion: str = Field(default="", description="Suggestion to fix the issue")
 
 
 class ValidationReport(BaseModel):
@@ -68,8 +73,13 @@ class ValidationReport(BaseModel):
     passed: int = Field(default=0)
     failed: int = Field(default=0)
     warnings: int = Field(default=0)
-    items: list[ComplianceItem] = Field(default_factory=list)
+    items: list[ComplianceItem] = Field(default_factory=list, alias="issues")
     overall_score: float = Field(default=0.0, ge=0.0, le=100.0)
+    category_scores: dict[str, float] = Field(default_factory=dict)
+    citation_coverage: float = Field(default=0.0, ge=0.0, le=1.0)
+    total_issues: int = Field(default=0)
+    
+    model_config = {"populate_by_name": True}
 
 
 class JobState(BaseModel):
