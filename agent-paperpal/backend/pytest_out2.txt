@@ -1,0 +1,70 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.14.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Program Files\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend
+configfile: pyproject.toml
+plugins: anyio-4.12.1, langsmith-0.7.6, asyncio-1.3.0, cov-7.0.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 5 items
+
+tests/agents/test_renderer.py::test_style_applicator PASSED              [ 20%]
+tests/agents/test_renderer.py::test_section_renderer PASSED              [ 40%]
+tests/agents/test_renderer.py::test_table_renderer PASSED                [ 60%]
+tests/agents/test_renderer.py::test_figure_renderer PASSED               [ 80%]
+tests/agents/test_renderer.py::test_renderer_service_integration FAILED  [100%]
+
+================================== FAILURES ===================================
+______________________ test_renderer_service_integration ______________________
+
+minimal_ir = IRSchema(document_title='', authors=[], elements=[IRElement(element_id='h1', element_type=<ElementType.TITLE: 'title'>...able 1: Mock Table', 'rows': [['1', '2'], ['3', '4']]}, children=[])], metadata={}, source_format='docx', word_count=0)
+sample_jro = JROSchema(journal_name='Test Journal', issn=None, citation_style=None, csl_xml=None, heading_rules=HeadingRules(number...Requirements(required=[], optional=[]), statistical_notation=None, extraction_source='test', extraction_confidence=1.0)
+
+    @pytest.mark.asyncio
+    async def test_renderer_service_integration(minimal_ir, sample_jro):
+        # Setup state
+        state = JobState(job_id="test_render_job", transformed_ir=minimal_ir, jro=sample_jro)
+        state.change_log = [ChangeEntry(element_id="h1", field="text", old_value="", new_value="Test Document Title", rule_source="test")]
+    
+        service = RendererService()
+    
+        # Mock Storage
+        with patch("app.services.renderer.renderer_service.storage_service.upload_output", new_callable=AsyncMock) as mock_upload, \
+>            patch("app.services.renderer.renderer_service.storage_service.generate_presigned_url", new_callable=AsyncMock) as mock_url:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agents\test_renderer.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\Python314\Lib\unittest\mock.py:1503: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000001380E741810>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <app.services.storage_service.StorageService object at 0x000001380D659550> does not have the attribute 'generate_presigned_url'
+
+C:\Program Files\Python314\Lib\unittest\mock.py:1473: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/agents/test_renderer.py::test_renderer_service_integration - Att...
+========================= 1 failed, 4 passed in 1.96s =========================

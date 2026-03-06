@@ -1,0 +1,154 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.14.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Program Files\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend
+configfile: pyproject.toml
+plugins: anyio-4.12.1, langsmith-0.7.6, asyncio-1.3.0, cov-7.0.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 5 items
+
+tests/agents/test_renderer.py::test_style_applicator ERROR               [ 20%]
+tests/agents/test_renderer.py::test_section_renderer PASSED              [ 40%]
+tests/agents/test_renderer.py::test_table_renderer ERROR                 [ 60%]
+tests/agents/test_renderer.py::test_figure_renderer ERROR                [ 80%]
+tests/agents/test_renderer.py::test_renderer_service_integration ERROR   [100%]
+
+=================================== ERRORS ====================================
+___________________ ERROR at setup of test_style_applicator ___________________
+
+    @pytest.fixture
+    def sample_jro():
+>       return JROSchema(
+            journal_name="Test Journal",
+            extraction_source="test",
+            extraction_confidence=1.0,
+            layout_rules=LayoutRules(
+                font_name="Arial",
+                font_size=11,
+                line_spacing=1.5,
+                margins={"top": 1.5, "bottom": 1.5, "left": 1.0, "right": 1.0}
+            ),
+            heading_rules=HeadingRules(),
+            figure_rules=FigureRules(caption_position="bottom"),
+            table_rules=TableRules(caption_position="top", border_style="simple")
+        )
+E       pydantic_core._pydantic_core.ValidationError: 2 validation errors for JROSchema
+E       abstract_rules
+E         Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.12/v/missing
+E       section_requirements
+E         Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.12/v/missing
+
+tests\agents\test_renderer.py:19: ValidationError
+____________________ ERROR at setup of test_table_renderer ____________________
+
+    @pytest.fixture
+    def sample_jro():
+>       return JROSchema(
+            journal_name="Test Journal",
+            extraction_source="test",
+            extraction_confidence=1.0,
+            layout_rules=LayoutRules(
+                font_name="Arial",
+                font_size=11,
+                line_spacing=1.5,
+                margins={"top": 1.5, "bottom": 1.5, "left": 1.0, "right": 1.0}
+            ),
+            heading_rules=HeadingRules(),
+            figure_rules=FigureRules(caption_position="bottom"),
+            table_rules=TableRules(caption_position="top", border_style="simple")
+        )
+E       pydantic_core._pydantic_core.ValidationError: 2 validation errors for JROSchema
+E       abstract_rules
+E         Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.12/v/missing
+E       section_requirements
+E         Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.12/v/missing
+
+tests\agents\test_renderer.py:19: ValidationError
+___________________ ERROR at setup of test_figure_renderer ____________________
+
+    @pytest.fixture
+    def sample_jro():
+>       return JROSchema(
+            journal_name="Test Journal",
+            extraction_source="test",
+            extraction_confidence=1.0,
+            layout_rules=LayoutRules(
+                font_name="Arial",
+                font_size=11,
+                line_spacing=1.5,
+                margins={"top": 1.5, "bottom": 1.5, "left": 1.0, "right": 1.0}
+            ),
+            heading_rules=HeadingRules(),
+            figure_rules=FigureRules(caption_position="bottom"),
+            table_rules=TableRules(caption_position="top", border_style="simple")
+        )
+E       pydantic_core._pydantic_core.ValidationError: 2 validation errors for JROSchema
+E       abstract_rules
+E         Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.12/v/missing
+E       section_requirements
+E         Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.12/v/missing
+
+tests\agents\test_renderer.py:19: ValidationError
+_____________ ERROR at setup of test_renderer_service_integration _____________
+
+    @pytest.fixture
+    def sample_jro():
+>       return JROSchema(
+            journal_name="Test Journal",
+            extraction_source="test",
+            extraction_confidence=1.0,
+            layout_rules=LayoutRules(
+                font_name="Arial",
+                font_size=11,
+                line_spacing=1.5,
+                margins={"top": 1.5, "bottom": 1.5, "left": 1.0, "right": 1.0}
+            ),
+            heading_rules=HeadingRules(),
+            figure_rules=FigureRules(caption_position="bottom"),
+            table_rules=TableRules(caption_position="top", border_style="simple")
+        )
+E       pydantic_core._pydantic_core.ValidationError: 2 validation errors for JROSchema
+E       abstract_rules
+E         Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.12/v/missing
+E       section_requirements
+E         Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.12/v/missing
+
+tests\agents\test_renderer.py:19: ValidationError
+=========================== short test summary info ===========================
+ERROR tests/agents/test_renderer.py::test_style_applicator - pydantic_core._pydantic_core.ValidationError: 2 validation errors for JROSchema
+abstract_rules
+  Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+section_requirements
+  Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+ERROR tests/agents/test_renderer.py::test_table_renderer - pydantic_core._pydantic_core.ValidationError: 2 validation errors for JROSchema
+abstract_rules
+  Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+section_requirements
+  Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+ERROR tests/agents/test_renderer.py::test_figure_renderer - pydantic_core._pydantic_core.ValidationError: 2 validation errors for JROSchema
+abstract_rules
+  Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+section_requirements
+  Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+ERROR tests/agents/test_renderer.py::test_renderer_service_integration - pydantic_core._pydantic_core.ValidationError: 2 validation errors for JROSchema
+abstract_rules
+  Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+section_requirements
+  Field required [type=missing, input_value={'journal_name': 'Test Jo... border_style='simple')}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+========================= 1 passed, 4 errors in 1.76s =========================
