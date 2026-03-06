@@ -1,0 +1,298 @@
+{
+    "document_title": "Advances in Neural Machine Translation",
+    "authors": [
+        "Jane Doe",
+        "John Smith"
+    ],
+    "source_format": "docx",
+    "word_count": 3500,
+    "metadata": {},
+    "elements": [
+        {
+            "element_id": "el_0",
+            "element_type": "paragraph",
+            "raw_text": "Advances in Neural Machine Translation",
+            "level": 0,
+            "metadata": {
+                "style_name": "Title"
+            },
+            "content": [
+                {
+                    "text": "Advances in Neural Machine Translation",
+                    "bold": true,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 24.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_1",
+            "element_type": "paragraph",
+            "raw_text": "Abstract: This paper presents a comprehensive evaluation of neural machine translation systems across twelve language pairs. We demonstrate that transformer-based models outperform recurrent architectures by 3.2 BLEU points on average across all evaluated benchmarks.",
+            "level": 0,
+            "metadata": {
+                "style_name": "Abstract"
+            },
+            "content": [
+                {
+                    "text": "Abstract: This paper presents a comprehensive evaluation of neural machine translation systems across twelve language pairs.",
+                    "bold": false,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 12.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_2",
+            "element_type": "paragraph",
+            "raw_text": "Keywords: neural machine translation, transformer, BLEU score, multilingual",
+            "level": 0,
+            "metadata": {
+                "style_name": "Normal"
+            },
+            "content": [
+                {
+                    "text": "Keywords: neural machine translation, transformer, BLEU score, multilingual",
+                    "bold": false,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 12.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_3",
+            "element_type": "paragraph",
+            "raw_text": "1. Introduction",
+            "level": 0,
+            "metadata": {
+                "style_name": "Heading 1"
+            },
+            "content": [
+                {
+                    "text": "1. Introduction",
+                    "bold": true,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 16.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_4",
+            "element_type": "paragraph",
+            "raw_text": "Neural machine translation (NMT) has revolutionized the field of computational linguistics (Bahdanau, 2015). Recent transformer-based approaches have further improved translation quality significantly (Vaswani et al., 2017). Several studies have confirmed these improvements (Wu et al., 2016, p. 5).",
+            "level": 0,
+            "metadata": {
+                "style_name": "Normal"
+            },
+            "content": [
+                {
+                    "text": "Neural machine translation (NMT) has revolutionized the field of computational linguistics (Bahdanau, 2015). Recent transformer-based approaches have further improved translation quality significantly (Vaswani et al., 2017). Several studies have confirmed these improvements (Wu et al., 2016, p. 5).",
+                    "bold": false,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 12.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_5",
+            "element_type": "paragraph",
+            "raw_text": "2. Related Work",
+            "level": 0,
+            "metadata": {
+                "style_name": "Heading 1"
+            },
+            "content": [
+                {
+                    "text": "2. Related Work",
+                    "bold": true,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 16.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_6",
+            "element_type": "paragraph",
+            "raw_text": "Early sequence-to-sequence models (Sutskever et al., 2014) established the baseline for NMT. Attention mechanisms (Bahdanau, 2015) dramatically improved long-sequence translation. The transformer architecture (Vaswani et al., 2017) achieved state-of-the-art results.",
+            "level": 0,
+            "metadata": {
+                "style_name": "Normal"
+            },
+            "content": [
+                {
+                    "text": "Early sequence-to-sequence models (Sutskever et al., 2014) established the baseline for NMT.",
+                    "bold": false,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 12.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_7",
+            "element_type": "paragraph",
+            "raw_text": "Figure 1. BLEU scores across twelve language pairs for evaluated NMT systems.",
+            "level": 0,
+            "metadata": {
+                "style_name": "Normal"
+            },
+            "content": [
+                {
+                    "text": "Figure 1. BLEU scores across twelve language pairs.",
+                    "bold": false,
+                    "italic": true,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 11.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_8",
+            "element_type": "paragraph",
+            "raw_text": "Table 1. Comparison of translation systems on WMT benchmarks.",
+            "level": 0,
+            "metadata": {
+                "style_name": "Normal"
+            },
+            "content": [
+                {
+                    "text": "Table 1. Comparison of translation systems.",
+                    "bold": false,
+                    "italic": true,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 11.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_9",
+            "element_type": "paragraph",
+            "raw_text": "References",
+            "level": 0,
+            "metadata": {
+                "style_name": "Heading 1"
+            },
+            "content": [
+                {
+                    "text": "References",
+                    "bold": true,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 16.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_10",
+            "element_type": "paragraph",
+            "raw_text": "Bahdanau, D., Cho, K., & Bengio, Y. (2015). Neural machine translation by jointly learning to align and translate. arXiv preprint arXiv:1409.0473.",
+            "level": 0,
+            "metadata": {
+                "style_name": "Normal"
+            },
+            "content": [
+                {
+                    "text": "Bahdanau, D., Cho, K., & Bengio, Y. (2015). Neural machine translation by jointly learning to align and translate.",
+                    "bold": false,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 12.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_11",
+            "element_type": "paragraph",
+            "raw_text": "Vaswani, A., Shazeer, N., & Parmar, N. (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30, 5998-6008.",
+            "level": 0,
+            "metadata": {
+                "style_name": "Normal"
+            },
+            "content": [
+                {
+                    "text": "Vaswani, A., Shazeer, N., & Parmar, N. (2017). Attention is all you need. Advances in Neural Information Processing Systems, 30, 5998-6008.",
+                    "bold": false,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 12.0
+                }
+            ],
+            "children": []
+        },
+        {
+            "element_id": "el_12",
+            "element_type": "paragraph",
+            "raw_text": "Sutskever, I., Vinyals, O., & Le, Q. V. (2014). Sequence to sequence learning with neural networks. Advances in Neural Information Processing Systems, 27, 3104-3112.",
+            "level": 0,
+            "metadata": {
+                "style_name": "Normal"
+            },
+            "content": [
+                {
+                    "text": "Sutskever, I., Vinyals, O., & Le, Q. V. (2014). Sequence to sequence learning with neural networks.",
+                    "bold": false,
+                    "italic": false,
+                    "underline": false,
+                    "superscript": false,
+                    "subscript": false,
+                    "font_name": "Times New Roman",
+                    "font_size_pt": 12.0
+                }
+            ],
+            "children": []
+        }
+    ]
+}
