@@ -1,0 +1,134 @@
+[
+    {
+        "input": "Nature guidelines: Abstract max 150 words. Headings should be bold and not numbered. Single column layout. Use Vancouver citation style.",
+        "journal_name": "Nature",
+        "expected_output": {
+            "journal_name": "Nature",
+            "issn": null,
+            "citation_style": "vancouver",
+            "csl_xml": null,
+            "heading_rules": {
+                "numbering_scheme": "none",
+                "capitalization": "title",
+                "levels": {
+                    "1": {
+                        "is_bold": true,
+                        "is_italic": false,
+                        "font_size": 12
+                    }
+                }
+            },
+            "abstract_rules": {
+                "max_words": 150,
+                "min_words": null,
+                "structured": false,
+                "required_sections": []
+            },
+            "layout_rules": {
+                "columns": 1,
+                "line_spacing": 1.5,
+                "margins": {
+                    "top": 1.0,
+                    "bottom": 1.0,
+                    "left": 1.0,
+                    "right": 1.0
+                }
+            },
+            "figure_rules": {
+                "caption_position": "bottom",
+                "caption_prefix": "Figure",
+                "numbering_format": "arabic"
+            },
+            "table_rules": {
+                "caption_position": "top",
+                "caption_prefix": "Table",
+                "border_style": "simple"
+            },
+            "section_requirements": {
+                "required": [
+                    "Introduction",
+                    "Results",
+                    "Discussion"
+                ],
+                "optional": [
+                    "Acknowledgements"
+                ]
+            },
+            "statistical_notation": null,
+            "extraction_source": "llm",
+            "extraction_confidence": 0.95
+        }
+    },
+    {
+        "input": "Science journal: Use APA 7 for citations. Abstract must be less than 250 words and structured with Introduction, Results, Conclusion. Double spacing required.",
+        "journal_name": "Science",
+        "expected_output": {
+            "journal_name": "Science",
+            "issn": null,
+            "citation_style": "apa",
+            "csl_xml": null,
+            "heading_rules": {
+                "numbering_scheme": null,
+                "capitalization": "sentence",
+                "levels": {
+                    "1": {
+                        "is_bold": true,
+                        "font_size": 14
+                    }
+                }
+            },
+            "abstract_rules": {
+                "max_words": 250,
+                "min_words": null,
+                "structured": true,
+                "required_sections": [
+                    "Introduction",
+                    "Results",
+                    "Conclusion"
+                ]
+            },
+            "layout_rules": {
+                "line_spacing": 2.0,
+                "columns": 1
+            },
+            "extraction_source": "llm",
+            "extraction_confidence": 0.9
+        }
+    },
+    {
+        "input": "IEEE Transactions: Citations in [1] format. Abstract max 200 words. Two column layout. Equations numbered. Headings in Roman numerals.",
+        "journal_name": "IEEE Transactions",
+        "expected_output": {
+            "journal_name": "IEEE Transactions",
+            "issn": null,
+            "citation_style": "ieee",
+            "csl_xml": null,
+            "heading_rules": {
+                "numbering_scheme": "roman",
+                "capitalization": "upper",
+                "levels": {
+                    "1": {
+                        "is_bold": true,
+                        "font_size": 10
+                    }
+                }
+            },
+            "abstract_rules": {
+                "max_words": 200,
+                "min_words": null,
+                "structured": false,
+                "required_sections": []
+            },
+            "layout_rules": {
+                "columns": 2,
+                "line_spacing": 1.0,
+                "margins": {
+                    "top": 0.75,
+                    "bottom": 0.75
+                }
+            },
+            "extraction_source": "llm",
+            "extraction_confidence": 0.85
+        }
+    }
+]
