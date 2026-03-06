@@ -1,0 +1,151 @@
+[StructureDetector] spaCy unavailable (unable to infer type for attribute "REGEX") — using rule-only detection
+[StructureDetector] spaCy unavailable (unable to infer type for attribute "REGEX") — using rule-only detection
+\u26a0\ufe0f  Redis connection failed: Error 22 connecting to localhost:6379. The remote computer refused the network connection.
+C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend\app\api\v1\endpoints\jobs.py:121: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+  db.add(job)
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+============================================================
+VALIDATING API GATEWAY & ORCHESTRATION
+============================================================
+[PASS] SC-5: Missing token returns 401
+[PASS] SC-5: Invalid token returns 401
+[PASS] SC-1: POST /api/v1/jobs returns 202 with job_id in 28.37ms (< 500ms)
+[FAIL] SC-3: Result endpoint returned 400
+[FAIL] SC-4: Unexpected exception 'AsyncSession' object is not callable
+Traceback (most recent call last):
+  File "C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend\validate_api_sc.py", line 150, in run_sc_checks
+    data = websocket.receive_json()
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\testclient.py", line 191, in receive_json
+    self._raise_on_close(message)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\testclient.py", line 144, in _raise_on_close
+    raise WebSocketDisconnect(code=message.get("code", 1000), reason=message.get("reason", ""))
+starlette.websockets.WebSocketDisconnect
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python314\Lib\contextlib.py", line 604, in __exit__
+    if cb(*exc_details):
+       ~~^^^^^^^^^^^^^^
+  File "C:\Program Files\Python314\Lib\contextlib.py", line 482, in _exit_wrapper
+    callback(*args, **kwds)
+    ~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\testclient.py", line 174, in close
+    self.send({"type": "websocket.disconnect", "code": code, "reason": reason})
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\testclient.py", line 158, in send
+    self.portal.call(self._receive_tx.send, message)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\anyio\from_thread.py", line 334, in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\Python314\Lib\concurrent\futures\_base.py", line 450, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\Python314\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\anyio\from_thread.py", line 259, in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\anyio\streams\memory.py", line 249, in send
+    self.send_nowait(item)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\anyio\streams\memory.py", line 218, in send_nowait
+    raise ClosedResourceError
+anyio.ClosedResourceError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend\validate_api_sc.py", line 159, in <module>
+    asyncio.run(run_sc_checks())
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python314\Lib\asyncio\runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Program Files\Python314\Lib\asyncio\runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Program Files\Python314\Lib\asyncio\base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend\validate_api_sc.py", line 148, in run_sc_checks
+    with client.websocket_connect(f"/api/v1/jobs/{job_id}/stream") as websocket:
+         ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\testclient.py", line 123, in __exit__
+    return self.exit_stack.__exit__(*args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Program Files\Python314\Lib\contextlib.py", line 619, in __exit__
+    raise exc
+  File "C:\Program Files\Python314\Lib\contextlib.py", line 604, in __exit__
+    if cb(*exc_details):
+       ~~^^^^^^^^^^^^^^
+  File "C:\Program Files\Python314\Lib\contextlib.py", line 482, in _exit_wrapper
+    callback(*args, **kwds)
+    ~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python314\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\Python314\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\anyio\from_thread.py", line 259, in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\testclient.py", line 137, in _run
+    await self.app(self.scope, receive_rx.receive, send_tx.send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\fastapi\applications.py", line 1134, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\middleware\errors.py", line 151, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\middleware\cors.py", line 79, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\routing.py", line 364, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\fastapi\routing.py", line 145, in app
+    await wrap_app_handling_exceptions(app, session)(scope, receive, send)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\fastapi\routing.py", line 142, in app
+    await func(session)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\fastapi\routing.py", line 507, in app
+    await dependant.call(**solved_result.values)
+  File "C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend\app\api\websocket.py", line 16, in job_stream
+    async for event in cache_service.subscribe_progress(job_id):
+    ...<2 lines>...
+            break
+  File "C:\Users\krunal\OneDrive\Desktop\Paperpal Agent\agent-paperpal\backend\app\services\cache_service.py", line 43, in subscribe_progress
+    await pubsub.subscribe(f"job:{job_id}:progress")
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\redis\asyncio\client.py", line 1071, in subscribe
+    ret_val = await self.execute_command("SUBSCRIBE", *new_channels.keys())
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\redis\asyncio\client.py", line 924, in execute_command
+    await self.connect()
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\redis\asyncio\client.py", line 934, in connect
+    self.connection = await self.connection_pool.get_connection()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\redis\asyncio\connection.py", line 1149, in get_connection
+    await self.ensure_connection(connection)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\redis\asyncio\connection.py", line 1182, in ensure_connection
+    await connection.connect()
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\redis\asyncio\connection.py", line 296, in connect
+    await self.connect_check_health(check_health=True)
+  File "C:\Users\krunal\AppData\Roaming\Python\Python314\site-packages\redis\asyncio\connection.py", line 315, in connect_check_health
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 22 connecting to localhost:6379. The remote computer refused the network connection.

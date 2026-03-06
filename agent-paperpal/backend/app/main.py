@@ -20,7 +20,6 @@ from fastapi.responses import JSONResponse
 from app.api.v1.router import api_v1_router
 from app.config import settings
 from app.database import engine, sessionmanager
-from app.middleware.auth import JWTMiddleware
 
 logger = logging.getLogger(__name__)
 
@@ -90,8 +89,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # ── JWT Middleware ──────────────────────────────────────────────────────
-    app.add_middleware(JWTMiddleware)
 
     # ── Global Exception Handler ────────────────────────────────────────────
     @app.exception_handler(Exception)

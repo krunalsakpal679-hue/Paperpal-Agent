@@ -15,7 +15,7 @@ celery = Celery(
     broker=settings.CELERY_BROKER_URL,
     backend=str(settings.REDIS_URL),
     include=[
-        "app.tasks.formatting",
+        "app.worker.tasks",
     ],
 )
 
