@@ -1,0 +1,29 @@
+﻿============================================================
+PIPELINE END-TO-END VALIDATION
+============================================================
+
+--- STAGE 1: INGESTION ---
+Status: failed
+Errors: ["File type 'application/octet-stream' is not supported. Allowed types: docx, pdf, txt, md."]
+
+--- STAGE 2: PARSING ---
+Status: failed
+Errors: ["File type 'application/octet-stream' is not supported. Allowed types: docx, pdf, txt, md.", 'state.raw_ir is None ù ingestion stage may have failed.']
+
+--- STAGE 3: INTERPRETATION ---
+Status: failed
+Errors: ["File type 'application/octet-stream' is not supported. Allowed types: docx, pdf, txt, md.", 'state.raw_ir is None ù ingestion stage may have failed.', 'Error 22 connecting to localhost:6379. The remote computer refused the network connection.']
+
+--- STAGE 4: TRANSFORMATION ---
+Status: failed
+Errors: ["File type 'application/octet-stream' is not supported. Allowed types: docx, pdf, txt, md.", 'state.raw_ir is None ù ingestion stage may have failed.', 'Error 22 connecting to localhost:6379. The remote computer refused the network connection.', 'Transformation requires both annotated_ir and jro to be populated.']
+Changes applied: 0
+
+--- STAGE 5: VALIDATION ---
+Status: failed
+Errors: ["File type 'application/octet-stream' is not supported. Allowed types: docx, pdf, txt, md.", 'state.raw_ir is None ù ingestion stage may have failed.', 'Error 22 connecting to localhost:6379. The remote computer refused the network connection.', 'Transformation requires both annotated_ir and jro to be populated.', 'Validation requires both transformed_ir and jro to be populated.']
+
+============================================================
+END-TO-END VALIDATION COMPLETE (Time: 5.20s)
+PIPELINE FAILED!
+============================================================

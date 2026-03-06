@@ -1,0 +1,89 @@
+﻿python : C:\Users\krunal\AppData\Roaming\Pyt
+hon\Python314\site-packages\confection\__ini
+t__.py:38: UserWarning: Core Pydantic V1 
+functionality isn't compatible with Python 
+3.14 or greater.
+At line:1 char:1
++ python validate_pipeline.py > 
+pipeline_out.txt 2>&1; Get-Content pipe ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo          : NotSpecified: 
+    (C:\Users\krunal....14 or greater.:Str  
+  ing) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommand 
+   Error
+ 
+  from pydantic.v1 import BaseModel, Extra, 
+ValidationError, create_model
+[StructureDetector] spaCy unavailable 
+(unable to infer type for attribute 
+"REGEX") ù using rule-only detection
+[StructureDetector] spaCy unavailable 
+(unable to infer type for attribute 
+"REGEX") ù using rule-only detection
+Failed to download CSL data from https://git
+hub.com/citation-style-language/styles/archi
+ve/refs/heads/master.zip: [WinError 32] The 
+process cannot access the file because it 
+is being used by another process: 'C:\\Users
+\\krunal\\OneDrive\\Desktop\\Paperpal Agent\
+\agent-paperpal\\backend\\data\\csl\\styles\
+\styles-master\\agriculturae-conspectus-scie
+ntificus.csl' -> 'C:\\Users\\krunal\\OneDriv
+e\\Desktop\\Paperpal Agent\\agent-paperpal\\
+backend\\data\\csl\\styles\\agriculturae-con
+spectus-scientificus.csl'
+Extraction attempt 1 failed for apa: Error 
+code: 401 - {'type': 'error', 'error': 
+{'type': 'authentication_error', 'message': 
+'invalid x-api-key'}, 'request_id': 
+'req_011CYmY5fdg2e9tUKVDKuDao'}
+Extraction attempt 2 failed for apa: Error 
+code: 401 - {'type': 'error', 'error': 
+{'type': 'authentication_error', 'message': 
+'invalid x-api-key'}, 'request_id': 
+'req_011CYmY5gke9p1cUnc2eqLpj'}
+Extraction attempt 3 failed for apa: Error 
+code: 401 - {'type': 'error', 'error': 
+{'type': 'authentication_error', 'message': 
+'invalid x-api-key'}, 'request_id': 
+'req_011CYmY5hs7gXwsSNRWVWmPk'}
+No CSL XML provided in JRO.
+No CSL style available for citation 
+reformatting.
+No CSL style available for reference 
+rebuilding.
+============================================================
+PIPELINE END-TO-END VALIDATION
+============================================================
+
+--- STAGE 1: INGESTION ---
+Status: ingesting
+Raw IR extracted: 6 elements
+
+--- STAGE 2: PARSING ---
+Status: parsing
+Parsed Headings: 0
+Parsed Citations: 1
+Parsed References: 1
+
+--- STAGE 3: INTERPRETATION ---
+Status: interpreting
+JRO extraction: apa (None)
+
+--- STAGE 4: TRANSFORMATION ---
+Status: transforming
+Changes applied: 2
+
+--- STAGE 5: VALIDATION ---
+Status: completed
+Validation Score: 70.0%
+Total Issues: 2
+ - [WARNING] Reference entry 'Smith, J. (2020)' is not cited in the text
+ - [ERROR] Abstract is missing
+
+============================================================
+END-TO-END VALIDATION COMPLETE (Time: 28.01s)
+PIPELINE SUCCESS!
+============================================================
