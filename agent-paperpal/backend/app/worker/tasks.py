@@ -13,20 +13,22 @@ import uuid
 
 logger = logging.getLogger(__name__)
 
-async def get_session():
+async def get_session_factory():
     try:
-        sessionmanager.session_factory
+        return sessionmanager.session_factory
     except RuntimeError:
         sessionmanager.init(str(settings.DATABASE_URL))
-    return sessionmanager.session_factory()
+        return sessionmanager.session_factory
 
 async def _run_pipeline_async(job_id: str):
-    session_factory = await get_session()
+    logger.error(f"DEBUG: Starting _run_pipeline_async for {job_id}")
+    session_factory = await get_session_factory()
     async with session_factory() as db:
         job = await job_service.get_job(db, uuid.UUID(job_id))
         if not job:
-            logger.error(f"Job {job_id} not found")
+            logger.error(f"DEBUG: Job {job_id} not found in DB")
             return
+        logger.error(f"DEBUG: Job found: {job.original_filename}")
 
         # Prepare initial state
         state = JobState(job_id=job_id, status=StateStatus.INGESTING)
@@ -37,24 +39,38 @@ async def _run_pipeline_async(job_id: str):
 
     try:
         # Run standard LangGraph invocation
-        final_state = await pipeline.ainvoke(state)
+        # Since we passed a JobState instance, we receive a JobState instance back
+        logger.info(f"[%s] Invoking pipeline for job %s", "Worker", job_id)
+        final_state: JobState = await pipeline.ainvoke(state)
         
         # Save results back to DB
         async with session_factory() as db:
-            if final_state.get("errors"):
-                # if there is an error
+            if final_state.errors:
+                logger.error(f"Pipeline reported errors for job {job_id}: {final_state.errors}")
+                # Mark as failed if any error exists
                 await job_service.update_status(db, uuid.UUID(job_id), JobStatus.failed, 100.0)
+                
+                # Update job with the first error message for quick visibility
+                job = await job_service.get_job(db, uuid.UUID(job_id))
+                if job:
+                    job.error_message = final_state.errors[0].message
+                    await db.commit()
             else:
-                s3_urls = final_state.get("metadata", {}).get("urls", {})
+                s3_urls = final_state.output_s3_urls
+                compliance_score = 0.0
+                if final_state.compliance_report:
+                    compliance_score = final_state.compliance_report.overall_score
+                
                 result_dict = {
-                    "compliance_score": final_state.get("validation_score", 0.0),
-                    "total_changes": len(final_state.get("change_log", [])),
+                    "compliance_score": compliance_score,
+                    "total_changes": len(final_state.change_log),
                     "output_s3_key": s3_urls.get("docx_url"),
                     "latex_s3_key": s3_urls.get("latex_url")
                 }
+                logger.info(f"[%s] Saving results for job %s. Score: %.2f", "Worker", job_id, compliance_score)
                 await job_service.save_result(db, uuid.UUID(job_id), result_dict)
     except Exception as exc:
-        logger.exception("Pipeline failed for job %s: %s", job_id, exc)
+        logger.exception("Pipeline crashed for job %s: %s", job_id, exc)
         async with session_factory() as db:
             await job_service.update_status(db, uuid.UUID(job_id), JobStatus.failed, 0.0)
         raise exc
@@ -62,6 +78,7 @@ async def _run_pipeline_async(job_id: str):
 
 @celery.task(bind=True, max_retries=3, retry_backoff=True)
 def run_pipeline_task(self, job_id: str):
+    logger.error(f"DEBUG: run_pipeline_task START for {job_id}")
     logger.info("Starting formatting pipeline for job %s", job_id)
     try:
         loop = asyncio.get_event_loop()

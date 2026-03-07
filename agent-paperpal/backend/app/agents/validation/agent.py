@@ -74,7 +74,7 @@ class ValidationAgent:
             )
             
             state.progress_pct = 95.0
-            state.status = JobStatus.COMPLETED
+            # Removed premature state.status = JobStatus.COMPLETED
             
             # 6. Publish progress
             await cache_service.publish_progress(state.job_id, {

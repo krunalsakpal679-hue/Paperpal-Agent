@@ -122,15 +122,19 @@ class FileValidator:
             mime_type: str = magic.from_buffer(file_bytes, mime=True)
         except Exception as exc:
             logger.error("MIME detection failed for '%s': %s", filename, exc)
-            return [
-                ValidationError(
-                    code="MIME_DETECTION_FAILED",
-                    message=f"Could not determine file type: {exc}",
-                    field="file",
-                )
-            ], ""
+            mime_type = "application/octet-stream"
 
         detected_extension = ALLOWED_MIME_TYPES.get(mime_type, "")
+        
+        # Fallback to extension if MIME is inconclusive (common on Windows)
+        if not detected_extension or mime_type == "application/octet-stream":
+            ext = filename.rsplit(".", 1)[-1].lower()
+            if ext in ALLOWED_EXTENSIONS:
+                # Map extension back to a canonical one if needed, 
+                # but here we just use it as the detected extension.
+                detected_extension = ext
+                logger.info("MIME returned %s, falling back to extension: %s", mime_type, detected_extension)
+
         if not detected_extension:
             logger.warning(
                 "File '%s' rejected: unsupported MIME type '%s'", filename, mime_type

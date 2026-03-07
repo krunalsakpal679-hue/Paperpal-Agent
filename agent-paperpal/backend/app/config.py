@@ -28,6 +28,11 @@ class Settings(BaseSettings):
         description="Google Gemini API key for free-tier LLM-powered agents",
     )
 
+    ANTHROPIC_API_KEY: str | None = Field(
+        default=None,
+        description="Anthropic API key (optional fallback)",
+    )
+
     # ── Database ────────────────────────────────────────────────────────────
     DATABASE_URL: PostgresDsn = Field(
         ...,
