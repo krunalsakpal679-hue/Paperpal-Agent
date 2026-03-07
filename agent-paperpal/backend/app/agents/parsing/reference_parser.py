@@ -337,4 +337,13 @@ class ReferenceParser:
             except Exception as exc:
                 logger.debug("[ReferenceParser] CrossRef fetch failed for %s: %s", ref.doi, exc)
 
-        await asyncio.gather(*[fetch_one(r) for r in refs], return_exceptions=True)
+        try:
+            # Add a strict timeout to the entire enrichment process (10s)
+            await asyncio.wait_for(
+                asyncio.gather(*[fetch_one(r) for r in refs], return_exceptions=True),
+                timeout=10.0
+            )
+        except asyncio.TimeoutError:
+            logger.warning("[ReferenceParser] CrossRef enrichment timed out after 10s.")
+        except Exception as e:
+            logger.error("[ReferenceParser] Enrichment error: %s", e)

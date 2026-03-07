@@ -40,6 +40,12 @@ class ValidationAgent:
         logger.info("[%s] Starting validation for job: %s", "ValidationAgent", state.job_id)
         state.status = JobStatus.VALIDATING
         state.progress_pct = 90.0
+        await cache_service.publish_progress(state.job_id, {
+            "agent": "validating",
+            "status": "processing",
+            "progress": 90,
+            "message": "Performing final compliance check against journal standards..."
+        })
 
         try:
             issues: List[ComplianceItem] = []
@@ -78,7 +84,7 @@ class ValidationAgent:
             
             # 6. Publish progress
             await cache_service.publish_progress(state.job_id, {
-                "agent": "validation",
+                "agent": "validating",
                 "status": "processing",
                 "progress": 95,
                 "message": f"Final compliance validation complete. Overall score: {state.compliance_report.overall_score}%"

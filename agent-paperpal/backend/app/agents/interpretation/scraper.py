@@ -62,7 +62,12 @@ class JournalScraper:
         async with httpx.AsyncClient(follow_redirects=True, timeout=15.0) as client:
             try:
                 # Nature or other sites might block simple User-Agent
-                headers = {"User-Agent": "Mozilla/5.0"}
+                # Use a more realistic browser User-Agent to avoid immediate blocks
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+                    "Accept-Language": "en-US,en;q=0.9",
+                }
                 response = await client.get(url, headers=headers)
                 response.raise_for_status()
                 return self._process_html(response.text)

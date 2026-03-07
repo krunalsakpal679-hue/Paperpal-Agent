@@ -85,6 +85,12 @@ class DocIngestionAgent:
         logger.info("[%s] Starting ingestion for job %s", AGENT_NAME, state.job_id)
         state.status = JobStatus.INGESTING
         state.progress_pct = 5.0
+        await cache_service.publish_progress(state.job_id, {
+            "agent": "ingesting",
+            "status": "processing",
+            "progress": 5,
+            "message": "Reading manuscript and validating file integrity..."
+        })
 
         try:
             # ── 1. Retrieve file bytes from S3 ─────────────────────────────────
@@ -211,7 +217,7 @@ class DocIngestionAgent:
             await cache_service.publish_progress(
                 job_id=job_id,
                 event_dict={
-                    "agent": "ingestion",
+                    "agent": "ingesting",
                     "status": "processing",
                     "progress": 20,
                     "message": "Manuscript ingestion and validation complete."

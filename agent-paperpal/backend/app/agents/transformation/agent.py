@@ -45,6 +45,12 @@ class TransformAgent:
         logger.info("[%s] Starting transformation for job: %s", "TransformAgent", state.job_id)
         state.status = JobStatus.TRANSFORMING
         state.progress_pct = 65.0
+        await cache_service.publish_progress(state.job_id, {
+            "agent": "transforming",
+            "status": "processing",
+            "progress": 65,
+            "message": "Applying formatting rules to manuscript content..."
+        })
 
         try:
             # 1. Initialize transformation state
@@ -69,7 +75,7 @@ class TransformAgent:
             
             # 4. Publish progress
             await cache_service.publish_progress(state.job_id, {
-                "agent": "transformation",
+                "agent": "transforming",
                 "status": "processing",
                 "progress": 80,
                 "message": f"Transformation complete: {len(change_log)} stylistic changes applied."

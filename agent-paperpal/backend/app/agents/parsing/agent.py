@@ -69,7 +69,14 @@ class DocParseAgent:
         logger.info("[%s] Starting parse for job %s", AGENT_NAME, state.job_id)
         state.status = JobStatus.PARSING
         state.progress_pct = 25.0
-
+        # Add the start event at the beginning of the run method.
+        await cache_service.publish_progress(state.job_id, {
+            "agent": "parsing",
+            "status": "processing",
+            "progress": 25,
+            "message": "Analyzing document structure and identifying sections..."
+        })
+        
         try:
             # ── 1. Guard ───────────────────────────────────────────────────────
             if state.raw_ir is None:
@@ -110,7 +117,7 @@ class DocParseAgent:
             state.progress_pct = 40.0
 
             # ── 7. Publish progress ────────────────────────────────────────────
-            await self._publish_progress(state.job_id)
+            await self._publish_progress(state)
 
             logger.info(
                 "[%s] Completed for job %s — elements=%d, citations=%d, refs=%d",
@@ -133,16 +140,16 @@ class DocParseAgent:
 
         return state
 
-    async def _publish_progress(self, job_id: str) -> None:
+    async def _publish_progress(self, state: JobState) -> None:
         """Publish a progress event to the Redis job channel (non-fatal)."""
         try:
             await cache_service.publish_progress(
-                job_id=job_id,
+                job_id=state.job_id,
                 event_dict={
                     "agent": "parsing",
                     "status": "processing",
                     "progress": 40,
-                    "message": f"Semantic labeling complete. Detected style: {ir.metadata.get('detected_style', 'unknown')}"
+                    "message": f"Semantic labeling complete. Detected style: {state.annotated_ir.metadata.get('detected_style', 'unknown')}"
                 },
             )
         except Exception as pub_exc:

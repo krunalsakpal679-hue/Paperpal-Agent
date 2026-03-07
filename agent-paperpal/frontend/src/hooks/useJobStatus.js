@@ -29,7 +29,9 @@ export function useJobStatus(jobId) {
                 console.log('[WS] Pipeline event received:', data);
 
                 if (data.status) {
-                    const progress = data.progress || data.pct || jobState.progressPct;
+                    const newProgress = Number(data.progress || data.pct || jobState.progressPct);
+                    const progress = Math.max(jobState.progressPct || 0, newProgress);
+
                     const agentName = data.agent || data.status;
 
                     // Only set job status to 'completed' if the data actually represents the job FINAL completion
