@@ -1,15 +1,5 @@
-// frontend/src/hooks/useJobs.js
-/**
- * Custom hook for managing formatting jobs.
- *
- * Provides methods to create, list, and track formatting jobs
- * via the backend API.
- */
-
 import { useState, useCallback } from 'react'
-import axios from 'axios'
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1'
+import api from '../api/client'
 
 export function useJobs() {
     const [jobs, setJobs] = useState([])
@@ -21,7 +11,7 @@ export function useJobs() {
         setIsLoading(true)
         setError(null)
         try {
-            const response = await axios.get(`${API_BASE}/jobs/`)
+            const response = await api.get('/api/v1/jobs/')
             setJobs(response.data)
         } catch (err) {
             setError(err.response?.data?.detail || 'Failed to fetch jobs')
@@ -38,7 +28,7 @@ export function useJobs() {
             formData.append('file', file)
             formData.append('target_journal', targetJournal)
 
-            const response = await axios.post(`${API_BASE}/jobs/`, formData, {
+            const response = await api.post('/api/v1/jobs/', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             })
             return response.data
@@ -54,7 +44,7 @@ export function useJobs() {
         setIsLoading(true)
         setError(null)
         try {
-            const response = await axios.get(`${API_BASE}/jobs/${jobId}`)
+            const response = await api.get(`/api/v1/jobs/${jobId}`)
             setCurrentJob(response.data)
             return response.data
         } catch (err) {
@@ -67,7 +57,7 @@ export function useJobs() {
 
     const cancelJob = useCallback(async (jobId) => {
         try {
-            await axios.post(`${API_BASE}/jobs/${jobId}/cancel`)
+            await api.post(`/api/v1/jobs/${jobId}/cancel`)
             await fetchJobs()
         } catch (err) {
             setError(err.response?.data?.detail || 'Failed to cancel job')

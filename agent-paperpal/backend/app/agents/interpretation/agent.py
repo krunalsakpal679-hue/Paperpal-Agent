@@ -6,6 +6,7 @@ Checks cache, performs CSL lookup, scrapes journal guidelines, and uses LLM for 
 
 import logging
 import hashlib
+import asyncio
 from typing import Optional
 
 from app.schemas.job_state import JobState, JobStatus, AgentError
@@ -65,16 +66,22 @@ class RuleInterpretAgent:
                 })
                 return state
 
-            csl_xml = await self.csl_loader.lookup(journal_id)
+            # ── Concurrent Lookup & Scrape ─────────────────────────────────────
+            csl_task = self.csl_loader.lookup(journal_id)
+            scrape_task = (
+                self.scraper.scrape(style_guide_url) 
+                if style_guide_url else asyncio.sleep(0, result=("", False))
+            )
+            
+            csl_xml, (scrape_text, wall_detected) = await asyncio.gather(csl_task, scrape_task)
             
             llm_jro = None
-            if style_guide_url:
-                text, wall_detected = await self.scraper.scrape(style_guide_url)
-                if text and not wall_detected:
-                    llm_jro = await self.llm_extractor.extract(text, journal_id)
-                elif wall_detected:
-                    logger.warning("[%s] Login wall detected for URL %s. Skipping LLM extraction.", 
-                                   "RuleInterpretAgent", style_guide_url)
+            if scrape_text and not wall_detected:
+                logger.info("[%s] SCRAPE SUCCESS. Extracted %d chars. Starting LLM...", "RuleInterpretAgent", len(scrape_text))
+                llm_jro = await self.llm_extractor.extract(scrape_text, journal_id)
+            elif wall_detected:
+                logger.warning("[%s] Login wall detected for URL %s. Skipping LLM extraction.", 
+                               "RuleInterpretAgent", style_guide_url)
 
             jro = self.merger.merge(csl_xml, llm_jro, journal_id)
             await cache_service.set_jro(cache_key, jro)

@@ -17,8 +17,9 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            window.location.href = '/login';
+            console.warn('[API] 401 Unauthorized detected - auto-redirect disabled for debug');
+            // localStorage.removeItem('token');
+            // window.location.href = '/login';
         }
         return Promise.reject(error);
     }
