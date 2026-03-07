@@ -79,9 +79,9 @@ class ValidationAgent:
             # 6. Publish progress
             await cache_service.publish_progress(state.job_id, {
                 "agent": "validation",
-                "status": "completed",
-                "pct": 95,
-                "overall_score": state.compliance_report.overall_score
+                "status": "processing",
+                "progress": 95,
+                "message": f"Final compliance validation complete. Overall score: {state.compliance_report.overall_score}%"
             })
             
             logger.info(

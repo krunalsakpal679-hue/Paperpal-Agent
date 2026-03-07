@@ -69,6 +69,19 @@ async def _run_pipeline_async(job_id: str):
                 }
                 logger.info(f"[%s] Saving results for job %s. Score: %.2f", "Worker", job_id, compliance_score)
                 await job_service.save_result(db, uuid.UUID(job_id), result_dict)
+
+                # ── PUBLISH FINAL COMPLETION ──────────────────────────────────
+                # This signal tells the frontend that EVERYTHING is done
+                from app.services.cache_service import cache_service
+                await cache_service.publish_progress(
+                    job_id=job_id,
+                    event_dict={
+                        "status": "completed",
+                        "progress": 100,
+                        "message": "Manuscript polishing complete! Navigating to results...",
+                        "agent": "SYSTEM"
+                    }
+                )
     except Exception as exc:
         logger.exception("Pipeline crashed for job %s: %s", job_id, exc)
         async with session_factory() as db:

@@ -212,8 +212,9 @@ class DocIngestionAgent:
                 job_id=job_id,
                 event_dict={
                     "agent": "ingestion",
-                    "status": "completed",
-                    "pct": 20,
+                    "status": "processing",
+                    "progress": 20,
+                    "message": "Manuscript ingestion and validation complete."
                 },
             )
         except Exception as pub_exc:

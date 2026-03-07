@@ -62,7 +62,10 @@ class RuleInterpretAgent:
                 state.jro = cached_jro
                 state.progress_pct = 60.0
                 await cache_service.publish_progress(state.job_id, {
-                    "agent": "interpretation", "status": "completed", "pct": 60
+                    "agent": "interpretation", 
+                    "status": "processing", 
+                    "progress": 60,
+                    "message": f"Retrieved journal rules from cache for {journal_id}"
                 })
                 return state
 
@@ -90,7 +93,10 @@ class RuleInterpretAgent:
             state.progress_pct = 60.0
             
             await cache_service.publish_progress(state.job_id, {
-                "agent": "interpretation", "status": "completed", "pct": 60
+                "agent": "interpretation", 
+                "status": "processing", 
+                "progress": 60,
+                "message": f"Successfully interpreted formatting rules for {journal_id}"
             })
             
             logger.info("[%s] Rule interpretation completed for %s", "RuleInterpretAgent", journal_id)

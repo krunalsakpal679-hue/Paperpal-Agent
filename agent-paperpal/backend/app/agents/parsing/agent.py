@@ -140,8 +140,9 @@ class DocParseAgent:
                 job_id=job_id,
                 event_dict={
                     "agent": "parsing",
-                    "status": "completed",
-                    "pct": 40,
+                    "status": "processing",
+                    "progress": 40,
+                    "message": f"Semantic labeling complete. Detected style: {ir.metadata.get('detected_style', 'unknown')}"
                 },
             )
         except Exception as pub_exc:

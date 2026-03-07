@@ -70,9 +70,9 @@ class TransformAgent:
             # 4. Publish progress
             await cache_service.publish_progress(state.job_id, {
                 "agent": "transformation",
-                "status": "completed",
-                "pct": 80,
-                "total_changes": len(change_log)
+                "status": "processing",
+                "progress": 80,
+                "message": f"Transformation complete: {len(change_log)} stylistic changes applied."
             })
             
             logger.info(

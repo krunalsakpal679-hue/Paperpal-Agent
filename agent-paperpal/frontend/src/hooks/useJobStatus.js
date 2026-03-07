@@ -26,21 +26,29 @@ export function useJobStatus(jobId) {
 
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                console.log('WS Message received:', data);
+                console.log('[WS] Pipeline event received:', data);
 
-                // Update Redux state
                 if (data.status) {
+                    const progress = data.progress || data.pct || jobState.progressPct;
+                    const agentName = data.agent || data.status;
+
+                    // Only set job status to 'completed' if the data actually represents the job FINAL completion
+                    // Intermediate agent 'completed' statuses should stay as 'processing' in the UI
+                    const isJobFinal = data.status === 'completed' && (progress >= 100 || !data.agent);
+                    const isJobFailed = data.status === 'failed';
+
                     dispatch(updateProgress({
-                        progressPct: data.progress || jobState.progressPct,
-                        currentAgent: data.status,
-                        status: data.status === 'completed' || data.status === 'failed' ? data.status : 'processing'
+                        progressPct: progress,
+                        currentAgent: agentName,
+                        status: isJobFinal ? 'completed' : isJobFailed ? 'failed' : 'processing'
                     }));
 
                     dispatch(addEvent({
                         status: data.status,
-                        message: data.message || `Agent ${data.status} complete`,
-                        progress: data.progress,
-                        agent: data.status,
+                        message: data.message || `Agent ${agentName} stage complete`,
+                        progress: progress,
+                        agent: agentName,
+                        timestamp: new Date().toISOString()
                     }));
                 }
             };
